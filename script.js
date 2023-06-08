@@ -224,7 +224,17 @@ function updateReportCard(reportCardTableElement, currentSemester) {
 
   // add your code here
   addReportCardHeaders(reportCardTableElement)
-  addCourseRowToReportCard(currentSemester.querySelector('.code-col'))
+  // addCourseRowToReportCard(currentSemester.querySelector('.code-col'))
+
+  const courses = studentData[currentSemester]
+
+  courses.forEach((course, i) => addCourseRowToReportCard(reportCardTableElement, course, i));
+
+  addTotalsRow(reportCardTableElement)
+  addGpaRow(reportCardTableElement)
+  // handle any additional calculations
+  addUpStudentCredits(reportCardTableElement)
+  calculateSemesterGpa(reportCardTableElement)
 }
 
 /**
@@ -239,10 +249,12 @@ function updateReportCard(reportCardTableElement, currentSemester) {
  */
 function closeDropdown(dropdownElement) {
   // code goes here
+  dropdownElement.classList.add("closed")
 }
 
 function openDropdown(dropdownElement) {
   // code goes here
+  dropdownElement.classList.remove('closed')
 }
 
 /**
@@ -252,6 +264,7 @@ function openDropdown(dropdownElement) {
  */
 function updateDropdownLabel() {
   // code goes here
+  dropdownLabelEl.innerHTML = semester
 }
 
 /**
@@ -271,6 +284,26 @@ function addEventListeners(
   // Add 3 event listeners - one for the fall semester option, the spring semester option, and the winter term option
   // Each callback function one should update the `semester` variable,
   // call the `updateReportCard` function, and close the dropdown
+
+  dropdownButtonElement.addEventListener("click", (e) => {
+  openDropdown(dropdownElement)
+  })
+
+  fallSemesterElement.addEventListener("click", (e) => {
+    semester = "Fall Semester"
+    updateReportCard(reportCardTableElement, semester)
+    closeDropdown(dropdownElement)
+  })
+  springSemesterElement.addEventListener("click", (e) => {
+    semester = "Spring Semester"
+    updateReportCard(reportCardTableElement, semester)
+    closeDropdown(dropdownElement)
+  })
+  winterTermElement.addEventListener("click", (e) => {
+    semester = "Winter Term"
+    updateReportCard(reportCardTableElement, semester)
+    closeDropdown(dropdownElement)
+  })
 }
 
 /***************
@@ -316,5 +349,6 @@ window.onload = function () {
   updateStudentImage(imageUrl) 
 
   updateReportCard(reportCardTableElement, semester)
+  addEventListeners(dropdownEl, dropdownButtonEl, reportCardTableEl, fallSemesterEl, springSemesterEl, winterTermEl)
 
 }
